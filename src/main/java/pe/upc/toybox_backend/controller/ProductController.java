@@ -7,7 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import pe.upc.toybox_backend.business.ProductBusiness;
+import pe.upc.toybox_backend.dtos.CategoryDTO;
 import pe.upc.toybox_backend.dtos.ProductDTO;
+import pe.upc.toybox_backend.entities.Category;
 import pe.upc.toybox_backend.entities.Product;
 
 import java.util.List;
@@ -53,6 +55,31 @@ public class ProductController {
             return new ResponseEntity<ProductDTO>(productDTO, HttpStatus.OK);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No se pudo listar por id ...");
+        }
+    }
+    @PutMapping("/update") //update
+    public ResponseEntity<ProductDTO> updateProduct(@RequestBody ProductDTO prod) {
+        ProductDTO productDTO;
+        Product product;
+        try {
+            product = convertToEntity(prod);
+            product = productBusiness.updateProduct(product);
+            productDTO = convertToDto(product);
+            return new ResponseEntity<ProductDTO>(productDTO, HttpStatus.OK);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No se pudo actualizar ...");
+        }
+    }
+    @DeleteMapping("/delete/{id}") //delete
+    public ResponseEntity<ProductDTO> deleteProduct(@PathVariable(value = "id") Long id){
+        Product product;
+        ProductDTO productDTO;
+        try {
+            product = productBusiness.deleteProduct(id);
+            productDTO = convertToDto(product);
+            return new ResponseEntity<ProductDTO>(productDTO, HttpStatus.OK);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No se pudo eliminar ...");
         }
     }
     @GetMapping("/listCategory/{id}") //list id

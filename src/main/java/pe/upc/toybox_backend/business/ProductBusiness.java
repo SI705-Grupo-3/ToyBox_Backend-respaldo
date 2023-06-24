@@ -3,6 +3,7 @@ package pe.upc.toybox_backend.business;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pe.upc.toybox_backend.entities.Category;
 import pe.upc.toybox_backend.entities.Product;
 import pe.upc.toybox_backend.repositories.ProductRepository;
 
@@ -33,4 +34,16 @@ public class ProductBusiness {
     public List<Product> listProductsByCategoryId(Long id) throws Exception{
         return productRepository.findByCategory_Id(id);
     }
+    @Transactional //update
+    public Product updateProduct(Product product) throws Exception{
+        productRepository.findById(product.getId()).orElseThrow(() -> new Exception("No se encontró la entidad"));
+        return productRepository.save(product);
+    }
+    @Transactional //delete
+    public Product deleteProduct(Long id) throws Exception{
+        Product product = productRepository.findById(id).orElseThrow(() -> new Exception("No se encontró la entidad"));
+        productRepository.delete(product);
+        return product;
+    }
+
 }
